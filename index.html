@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>احداثياتي - موقع الإحداثيات الجغرافية</title>
+    <title>📍 احداثياتي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
         
         :root {
-            --bg-primary: #252A2D;
-            --bg-secondary: #171C1F;
-            --accent: #4A90E2;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B0B3B8;
-            --border: #3A3B3C;
-            --success: #00C851;
+            --bg-primary: #0D1117;
+            --bg-secondary: #161B22;
+            --bg-card: #21262D;
+            --accent: #58A6FF;
+            --accent-hover: #79C0FF;
+            --text-primary: #F0F6FC;
+            --text-secondary: #8B949E;
+            --border: #30363D;
+            --success: #3FB950;
+            --warning: #D29922;
+            --error: #F85149;
         }
         
         * {
@@ -26,7 +30,7 @@
         }
         
         body {
-            background-color: var(--bg-primary);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0A0D14 100%);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -34,6 +38,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            line-height: 1.6;
         }
         
         .container {
@@ -42,48 +47,97 @@
             margin: 0 auto;
         }
         
-        .card {
-            background-color: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+            width: 100%;
         }
         
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-            color: var(--text-primary);
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
         }
         
         .location-icon {
             text-align: center;
-            font-size: 3.5rem;
+            font-size: 4rem;
             color: var(--accent);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .btn {
             display: block;
             width: 100%;
-            padding: 16px;
-            background-color: var(--accent);
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent), #1F6FEB);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 20px 0;
-            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+            margin: 25px 0;
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.6);
+            box-shadow: 0 12px 30px rgba(88, 166, 255, 0.4);
         }
         
         .btn:active {
@@ -91,64 +145,78 @@
         }
         
         .btn:disabled {
-            background-color: #5A5B5D;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
         
+        .btn:disabled::before {
+            display: none;
+        }
+        
         .city-box {
-            background-color: var(--bg-primary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
             border: 1px solid var(--border);
             text-align: center;
+            animation: slideUp 0.5s ease;
         }
         
         .city-name {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--text-primary);
         }
         
         .location-details {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: var(--text-secondary);
         }
         
         .coordinates-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 18px;
+            margin: 25px 0;
         }
         
         .coordinate-box {
-            background-color: var(--bg-primary);
-            border-radius: 12px;
-            padding: 18px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 22px;
             border: 1px solid var(--border);
             position: relative;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease;
+        }
+        
+        .coordinate-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
         
         .coordinate-label {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         
         .coordinate-value {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text-primary);
             direction: ltr;
             text-align: center;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
         }
         
         .copy-btn {
@@ -157,12 +225,14 @@
             border: none;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 1.1rem;
-            padding: 5px;
+            font-size: 1.2rem;
+            padding: 8px;
+            border-radius: 8px;
         }
         
         .copy-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.85);
+            background: rgba(88, 166, 255, 0.1);
         }
         
         .copy-btn.copied {
@@ -170,39 +240,57 @@
         }
         
         .instructions {
-            background-color: var(--bg-primary);
-            border-radius: 12px;
-            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 25px;
             margin-top: 20px;
             border: 1px solid var(--border);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            animation: slideUp 0.7s ease;
+        }
+        
+        .instructions.hidden {
+            display: none;
         }
         
         .instructions h3 {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: var(--accent);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .instructions p {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.7;
         }
         
-        .instructions ol {
+        .steps {
             padding-right: 20px;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.8;
         }
         
-        .instructions li {
-            margin-bottom: 8px;
+        .steps li {
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .steps li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: -1em;
         }
         
         .footer {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 30px;
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
@@ -210,72 +298,61 @@
         .loading {
             display: none;
             text-align: center;
-            margin: 20px 0;
+            margin: 25px 0;
+            animation: fadeIn 0.5s ease;
         }
         
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             border-top: 4px solid var(--accent);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
         }
         
-        .permission-denied {
+        .success-message {
             display: none;
             text-align: center;
-            padding: 20px;
-            background-color: rgba(255, 0, 0, 0.1);
-            border-radius: 12px;
+            padding: 25px;
+            background: rgba(63, 185, 80, 0.1);
+            border-radius: 16px;
             margin: 20px 0;
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            animation: slideUp 0.5s ease;
         }
         
-        .denied-icon {
-            font-size: 2.5rem;
-            color: #ff4444;
-            margin-bottom: 15px;
-        }
-        
-        .manual-coordinates {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            background-color: rgba(74, 144, 226, 0.1);
-            border-radius: 12px;
-            margin: 20px 0;
-            border: 1px solid rgba(74, 144, 226, 0.3);
-        }
-        
-        .manual-icon {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 15px;
+        .success-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 20px;
         }
         
         .app-link {
             display: none;
             text-align: center;
-            margin: 20px 0;
+            margin: 25px 0;
+            animation: fadeIn 0.8s ease;
         }
         
         .app-link-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent), #357ABD);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent), #1F6FEB);
             color: white;
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 700;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
         }
         
         .app-link-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(88, 166, 255, 0.4);
         }
         
         .app-link-btn:active {
@@ -283,14 +360,15 @@
         }
         
         .copyright {
-            background-color: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
             text-align: center;
             border: 1px solid var(--border);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
+            animation: fadeIn 1s ease;
         }
         
         @keyframes spin {
@@ -298,12 +376,13 @@
             100% { transform: rotate(360deg); }
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -313,11 +392,25 @@
                 grid-template-columns: 1fr;
             }
             
-            h1 {
-                font-size: 1.6rem;
+            .card {
+                padding: 25px;
             }
             
+            .location-icon {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
             .card {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 16px;
+            }
+            
+            .city-box {
                 padding: 20px;
             }
         }
@@ -325,9 +418,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>📍 احداثياتي</h1>
+        <div class="header">
+            <div class="logo">📍 احداثياتي</div>
+        </div>
         
-        <div class="card fade-in">
+        <div class="card">
             <div class="location-icon">
                 <i class="fas fa-map-marker-alt"></i>
             </div>
@@ -338,36 +433,27 @@
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>جاري تحديد موقعك...</p>
+                <p>جاري تحديد موقعك بدقة...</p>
             </div>
             
-            <div class="permission-denied" id="permissionDenied">
-                <div class="denied-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
                 </div>
-                <h3>تم رفض طلب الموقع</h3>
-                <p>يجب السماح بالوصول إلى الموقع الجغرافي لعرض الإحداثيات</p>
-            </div>
-            
-            <div class="manual-coordinates" id="manualCoordinates">
-                <div class="manual-icon">
-                    <i class="fas fa-map-marked-alt"></i>
-                </div>
-                <h3>انسخ الإحداثيات يدويًا</h3>
-                <p>انسخ خط الطول والعرض واذهب لتطبيق مواقيت الصلاة</p>
-                <p>ضع الأرقام في مكانها في التطبيق وسيتم تحديد موقعك بدقة</p>
+                <h3>تم تحديد موقعك بنجاح!</h3>
+                <p>انسخ الإحداثيات والصقها في تطبيق مواقيت الصلاة</p>
             </div>
             
             <div id="locationData" style="display: none;">
-                <div class="city-box fade-in">
+                <div class="city-box">
                     <div class="city-name" id="cityName">--</div>
                     <div class="location-details" id="locationDetails">--</div>
                 </div>
                 
                 <div class="coordinates-container">
-                    <div class="coordinate-box fade-in">
+                    <div class="coordinate-box">
                         <div class="coordinate-label">
-                            خط العرض
+                            خط العرض (Latitude)
                             <button class="copy-btn" onclick="copyCoordinate('latitudeValue', this)">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -375,9 +461,9 @@
                         <div class="coordinate-value" id="latitudeValue">--</div>
                     </div>
                     
-                    <div class="coordinate-box fade-in">
+                    <div class="coordinate-box">
                         <div class="coordinate-label">
-                            خط الطول
+                            خط الطول (Longitude)
                             <button class="copy-btn" onclick="copyCoordinate('longitudeValue', this)">
                                 <i class="far fa-copy"></i>
                             </button>
@@ -387,16 +473,35 @@
                 </div>
             </div>
             
+            <div class="instructions" id="initialInstructions">
+                <h3><i class="fas fa-info-circle"></i> تعليمات الاستخدام</h3>
+                <p>انقر على الزر أعلاه للسماح بالوصول إلى موقعك الجغرافي</p>
+                <p>سيتم تحديد إحداثيات موقعك بدقة وعرضها هنا</p>
+            </div>
+            
+            <div class="instructions hidden" id="copyInstructions">
+                <h3><i class="fas fa-copy"></i> خطوات النسخ والتطبيق</h3>
+                <ol class="steps">
+                    <li>انقر على أيقونة النسخ بجانب خط الطول والعرض</li>
+                    <li>افتح تطبيق مواقيت الصلاة على هاتفك</li>
+                    <li>ابحث عن خيار الإحداثيات أو تحديد الموقع يدويًا</li>
+                    <li>الصق الإحداثيات التي نسختها في الحقول المخصصة</li>
+                    <li>احفظ التغييرات وسيتم تحديد موقعك بدقة تامة</li>
+                    <li>ستمتع بمزامنة مواقيت الصلاة الدقيقة لموقعك</li>
+                </ol>
+            </div>
+            
             <div class="app-link" id="appLink">
                 <a href="#" class="app-link-btn" id="appLinkBtn">
-                    <i class="fas fa-external-link-alt"></i> رابط التطبيق
+                    <i class="fas fa-external-link-alt"></i> 
+                    <span>رابط التطبيق</span>
                 </a>
             </div>
         </div>
         
-        <div class="copyright fade-in">
+        <div class="copyright">
             <p>هذا الموقع يخص تطبيق مواقيت الصلاة</p>
-            <p>جميع الحقوق محفوظة لدى المطور Kimo</p>
+            <p>رابط التطبيق - جميع الحقوق محفوظة لدى المطور Kimo</p>
         </div>
     </div>
 
@@ -405,8 +510,9 @@
             const getLocationBtn = document.getElementById('getLocationBtn');
             const loadingElement = document.getElementById('loading');
             const locationData = document.getElementById('locationData');
-            const permissionDenied = document.getElementById('permissionDenied');
-            const manualCoordinates = document.getElementById('manualCoordinates');
+            const successMessage = document.getElementById('successMessage');
+            const initialInstructions = document.getElementById('initialInstructions');
+            const copyInstructions = document.getElementById('copyInstructions');
             const appLink = document.getElementById('appLink');
             const appLinkBtn = document.getElementById('appLinkBtn');
             const latitudeValue = document.getElementById('latitudeValue');
@@ -436,10 +542,9 @@
                 }
                 
                 loadingElement.style.display = 'block';
-                permissionDenied.style.display = 'none';
-                manualCoordinates.style.display = 'none';
+                initialInstructions.classList.add('hidden');
                 getLocationBtn.disabled = true;
-                getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تحديد الموقع...';
+                getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المسح الجغرافي...';
                 
                 navigator.geolocation.getCurrentPosition(
                     // Success callback
@@ -454,6 +559,8 @@
                         // إخفاء التحميل وإظهار النتائج
                         loadingElement.style.display = 'none';
                         locationData.style.display = 'block';
+                        successMessage.style.display = 'block';
+                        copyInstructions.classList.remove('hidden');
                         getLocationBtn.style.display = 'none';
                         
                         // جلب معلومات الموقع
@@ -469,9 +576,10 @@
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
                                 errorMessage = 'تم رفض طلب الوصول إلى الموقع';
-                                permissionDenied.style.display = 'none'; // نخفي رسالة الرفض
-                                manualCoordinates.style.display = 'block'; // نعرض البديل اليدوي
-                                locationData.style.display = 'block'; // نظهر مربعات الإحداثيات الفارغة
+                                // إظهار التعليمات البديلة
+                                locationData.style.display = 'block';
+                                copyInstructions.classList.remove('hidden');
+                                initialInstructions.classList.add('hidden');
                                 
                                 // تعيين قيم افتراضية للإحداثيات
                                 latitudeValue.textContent = "انسخ من التطبيق";
@@ -552,11 +660,12 @@
                 .then(() => {
                     // إظهار رسالة نجاح النسخ مع أنيميشن
                     button.classList.add('copied');
+                    const originalIcon = button.innerHTML;
                     button.innerHTML = '<i class="fas fa-check"></i>';
                     
                     setTimeout(() => {
                         button.classList.remove('copied');
-                        button.innerHTML = '<i class="far fa-copy"></i>';
+                        button.innerHTML = originalIcon;
                     }, 2000);
                 })
                 .catch(err => {
