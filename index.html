@@ -3,110 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحديد الموقع بدقة</title>
+    <title>تحديد الموقع الجغرافي</title>
     <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --card-bg: #0f3460;
+            --accent: #3282b8;
+            --light-accent: #4ea8de;
+            --text: #e6e6e6;
+            --success: #4caf50;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background-color: var(--primary-bg);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 0;
-            margin: 0;
-            color: #e0e0e0;
-            overflow-x: hidden;
+            align-items: center;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
-            height: 100vh;
-            background: #202020;
-            padding: 20px;
+            max-width: 500px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            overflow-y: auto;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         h1 {
-            text-align: center;
-            color: #ffffff;
-            margin-bottom: 20px;
-            margin-top: 20px;
-            font-size: 22px;
+            color: var(--light-accent);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
         }
 
-        .btn-main {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+        .card {
+            background-color: var(--card-bg);
             border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn {
+            background-color: var(--accent);
             color: white;
-            font-size: 18px;
-            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            margin-bottom: 20px;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-main:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-main:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease;
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
         }
 
         .instructions {
-            background: #2a2a2a;
+            background-color: var(--secondary-bg);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-top: 15px;
-            border-right: 4px solid #667eea;
-            animation: fadeIn 0.5s ease;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .instructions h3 {
-            color: #667eea;
-            margin-bottom: 12px;
-            font-size: 16px;
+            color: var(--light-accent);
+            margin-bottom: 10px;
         }
 
-        .instructions p {
-            color: #b0b0b0;
-            line-height: 1.6;
+        .coordinates-container {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .coordinates-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .coordinate-box {
+            flex: 1;
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .coordinate-label {
+            font-size: 0.9rem;
             margin-bottom: 8px;
-            font-size: 13px;
+            color: var(--light-accent);
         }
 
-        .instructions strong {
-            color: #ffffff;
+        .coordinate-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .copy-btn:active {
+            background-color: var(--light-accent);
+        }
+
+        .location-details {
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
         }
 
         .loading {
             display: none;
-            text-align: center;
-            padding: 40px;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .spinner {
-            border: 4px solid #2a2a2a;
-            border-top: 4px solid #667eea;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--light-accent);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -114,342 +208,257 @@
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .results {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .coord-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .coord-box {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .coord-label {
-            color: #667eea;
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .coord-value {
-            color: #ffffff;
-            font-size: 16px;
-            margin-bottom: 15px;
-            word-break: break-all;
-            direction: ltr;
-        }
-
-        .btn-copy {
-            width: 100%;
-            padding: 10px;
-            background: #3a3a3a;
-            border: 2px solid #667eea;
+        .app-link {
+            background-color: var(--card-bg);
             border-radius: 8px;
-            color: #667eea;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .btn-copy:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-copy:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease;
-        }
-
-        .location-details {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .city {
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .district {
-            color: #b0b0b0;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .precise-location {
-            color: #888;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        .footer {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
             text-align: center;
             margin-top: 20px;
+            width: 100%;
         }
 
-        .footer p {
-            color: #b0b0b0;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .app-link {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .app-link a {
+            color: var(--light-accent);
             text-decoration: none;
-            border-radius: 8px;
             font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: block;
+            padding: 10px;
+            border: 1px solid var(--light-accent);
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
-        .app-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .app-link a:hover {
+            background-color: var(--light-accent);
+            color: var(--primary-bg);
         }
 
-        .app-link:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease;
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #aaa;
+            width: 100%;
         }
 
         .hidden {
-            display: none !important;
+            display: none;
         }
 
-        .error-msg {
-            background: #3a1f1f;
-            border-right: 4px solid #ff4444;
-            padding: 15px;
-            border-radius: 8px;
-            color: #ffaaaa;
-            margin-top: 15px;
-            font-size: 14px;
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌍 تحديد موقعي بدقة</h1>
-        
-        <div id="initialView">
-            <button class="btn-main" onclick="requestLocation()">تحديد موقعي بدقة</button>
+        <header>
+            <h1>تحديد الموقع الجغرافي</h1>
+            <p>احصل على خطوط الطول والعرض لموقعك بدقة فائقة</p>
+        </header>
+
+        <div class="card">
+            <button id="locationBtn" class="btn">تحديد موقعي بدقة</button>
             
-            <div class="instructions">
-                <h3>⚠️ إذا لم يعمل الزر:</h3>
-                <p><strong>بالعربية:</strong><br>
-                انتقل للإعدادات > إعدادات المواقع الإلكترونية > أذن الموقع > السؤال أولاً</p>
-                
-                <p><strong>English:</strong><br>
-                Go to Settings > Site Settings > Location Permission > Ask First</p>
+            <div id="initialInstructions" class="instructions">
+                <h3>اذا لم يعمل الزر:</h3>
+                <p>انتقل للاعدادات > اعدادات المواقع الالكترونيه > اذن الموقع > السؤال اولا</p>
+                <p>Settings > Site settings > Location > Ask before accessing</p>
+            </div>
+
+            <div id="afterInstructions" class="instructions hidden">
+                <h3>تعليمات الاستخدام:</h3>
+                <p>انسخ خط الطول هذا و العرض هذا ثم انتقل للتطبيق و ضعهم في قائمة تحديد الموقع يدويا ثم سيتم تحديد موقعك بدقه بدون اذن الموقع وسيتم تحديد مواقيت الصلاه الخاصه بك بدقه</p>
             </div>
         </div>
 
-        <div id="loadingView" class="loading">
+        <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p style="color: #667eea; font-size: 18px;">جاري تحديد موقعك بدقة...</p>
+            <p>جاري تحديد موقعك...</p>
         </div>
 
-        <div id="resultsView" class="results">
-            <div class="instructions">
-                <h3>📋 تعليمات الاستخدام:</h3>
-                <p>انسخ خط الطول وخط العرض، ثم انتقل للتطبيق وضعهم في قائمة <strong>تحديد الموقع يدوياً</strong>. سيتم تحديد موقعك بدقة بدون أذن الموقع وسيتم تحديد مواقيت الصلاة الخاصة بك بدقة.</p>
-            </div>
-
-            <div class="coord-container">
-                <div class="coord-box">
-                    <div class="coord-label">خط الطول</div>
-                    <div class="coord-value" id="longitude">-</div>
-                    <button class="btn-copy" onclick="copyCoord('longitude')">📋 نسخ</button>
+        <div id="coordinatesContainer" class="coordinates-container">
+            <div class="coordinates-row">
+                <div class="coordinate-box">
+                    <div class="coordinate-label">خط الطول</div>
+                    <div id="longitudeValue" class="coordinate-value">--</div>
+                    <button class="copy-btn" data-clipboard-target="#longitudeValue">نسخ</button>
                 </div>
-                <div class="coord-box">
-                    <div class="coord-label">خط العرض</div>
-                    <div class="coord-value" id="latitude">-</div>
-                    <button class="btn-copy" onclick="copyCoord('latitude')">📋 نسخ</button>
+                <div class="coordinate-box">
+                    <div class="coordinate-label">خط العرض</div>
+                    <div id="latitudeValue" class="coordinate-value">--</div>
+                    <button class="copy-btn" data-clipboard-target="#latitudeValue">نسخ</button>
                 </div>
             </div>
 
             <div class="location-details">
-                <div class="city" id="city">-</div>
-                <div class="district" id="district">-</div>
-                <div class="precise-location" id="precise">-</div>
+                <div id="cityName">--</div>
+                <div id="neighborhood" style="font-size: 0.9rem; color: #ccc; margin-top: 5px;">--</div>
             </div>
         </div>
 
-        <div class="footer">
-            <p>هذا الموقع خاص بتطبيق مواقيت الصلاة</p>
-            <p style="color: #667eea; font-weight: bold; margin-bottom: 15px;">المطور: Kimo</p>
-            <a href="https://example.com/prayer-times-app" class="app-link" target="_blank">
-                انتقل للتطبيق 📱
-            </a>
+        <div class="app-link">
+            <a href="https://example.com/prayer-times" target="_blank">انتقل إلى تطبيق مواقيت الصلاة Kimo</a>
         </div>
+
+        <footer>
+            <p>جميع الحقوق محفوظة &copy; 2023 - موقع تحديد الموقع الجغرافي</p>
+            <p>هذا الموقع خاص بتطبيق مواقيت الصلاة الخاص بالمطور Kimo</p>
+        </footer>
     </div>
 
     <script>
-        let attemptCount = 0;
-        const maxAttempts = 3;
+        document.addEventListener('DOMContentLoaded', function() {
+            const locationBtn = document.getElementById('locationBtn');
+            const loading = document.getElementById('loading');
+            const coordinatesContainer = document.getElementById('coordinatesContainer');
+            const initialInstructions = document.getElementById('initialInstructions');
+            const afterInstructions = document.getElementById('afterInstructions');
+            const longitudeValue = document.getElementById('longitudeValue');
+            const latitudeValue = document.getElementById('latitudeValue');
+            const cityName = document.getElementById('cityName');
+            const neighborhood = document.getElementById('neighborhood');
+            const copyButtons = document.querySelectorAll('.copy-btn');
 
-        async function requestLocation() {
-            attemptCount++;
+            let permissionDeniedCount = 0;
 
-            // Check if geolocation is supported
-            if (!navigator.geolocation) {
-                showError('المتصفح لا يدعم تحديد الموقع');
-                return;
-            }
-
-            // Show loading
-            document.getElementById('initialView').classList.add('hidden');
-            document.getElementById('loadingView').style.display = 'block';
-
-            const options = {
-                enableHighAccuracy: true,
-                timeout: 15000,
-                maximumAge: 0
-            };
-
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    
-                    // Display coordinates
-                    document.getElementById('latitude').textContent = lat.toFixed(6);
-                    document.getElementById('longitude').textContent = lon.toFixed(6);
-
-                    // Get location details
-                    await getLocationDetails(lat, lon);
-
-                    // Show results
-                    document.getElementById('loadingView').style.display = 'none';
-                    document.getElementById('resultsView').style.display = 'block';
-                    
-                    attemptCount = 0; // Reset attempt count on success
-                },
-                (error) => {
-                    handleLocationError(error);
-                },
-                options
-            );
-        }
-
-        function handleLocationError(error) {
-            document.getElementById('loadingView').style.display = 'none';
-            document.getElementById('initialView').classList.remove('hidden');
-
-            let errorMessage = '';
-            
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    if (attemptCount >= maxAttempts) {
-                        errorMessage = 'تم رفض إذن الموقع عدة مرات. يرجى اتباع التعليمات أدناه لتفعيل أذن الموقع من إعدادات المتصفح.';
-                    } else {
-                        errorMessage = `تم رفض إذن الموقع. المحاولة ${attemptCount} من ${maxAttempts}. يرجى السماح بالوصول للموقع.`;
-                    }
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = 'معلومات الموقع غير متوفرة حالياً.';
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = 'انتهت مهلة طلب تحديد الموقع. يرجى المحاولة مرة أخرى.';
-                    break;
-                default:
-                    errorMessage = 'حدث خطأ غير معروف في تحديد الموقع.';
-            }
-
-            // Show error message
-            const existingError = document.querySelector('.error-msg');
-            if (existingError) {
-                existingError.remove();
-            }
-
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-msg';
-            errorDiv.textContent = errorMessage;
-            document.getElementById('initialView').appendChild(errorDiv);
-        }
-
-        async function getLocationDetails(lat, lon) {
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ar`);
-                const data = await response.json();
+            // إضافة تأثير الضغط للأزرار
+            document.querySelectorAll('.btn, .copy-btn').forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
                 
-                if (data && data.address) {
-                    const address = data.address;
-                    document.getElementById('city').textContent = address.city || address.town || address.village || 'غير متوفر';
-                    document.getElementById('district').textContent = address.suburb || address.neighbourhood || address.quarter || 'غير متوفر';
-                    document.getElementById('precise').textContent = `${address.road || ''} ${address.house_number || ''}`.trim() || 'تفاصيل دقيقة غير متوفرة';
-                } else {
-                    setDefaultLocationText();
-                }
-            } catch (error) {
-                console.error('Error fetching location details:', error);
-                setDefaultLocationText();
-            }
-        }
-
-        function setDefaultLocationText() {
-            document.getElementById('city').textContent = 'غير متوفر';
-            document.getElementById('district').textContent = 'غير متوفر';
-            document.getElementById('precise').textContent = 'غير متوفر';
-        }
-
-        function copyCoord(type) {
-            const value = document.getElementById(type).textContent;
-            
-            navigator.clipboard.writeText(value).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '✓ تم النسخ';
-                btn.style.background = '#667eea';
-                btn.style.color = 'white';
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'scale(1)';
+                });
                 
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '#3a3a3a';
-                    btn.style.color = '#667eea';
-                }, 2000);
-            }).catch(err => {
-                alert('فشل النسخ. يرجى النسخ يدوياً.');
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
             });
-        }
 
-        function showError(message) {
-            document.getElementById('loadingView').style.display = 'none';
-            document.getElementById('initialView').classList.remove('hidden');
-            
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-msg';
-            errorDiv.textContent = message;
-            document.getElementById('initialView').appendChild(errorDiv);
-        }
+            // وظيفة نسخ النص
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-clipboard-target');
+                    const targetElement = document.querySelector(targetId);
+                    const textToCopy = targetElement.textContent;
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'تم النسخ!';
+                        this.style.backgroundColor = 'var(--success)';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.backgroundColor = 'var(--accent)';
+                        }, 2000);
+                    });
+                });
+            });
+
+            // وظيفة الحصول على الموقع
+            locationBtn.addEventListener('click', getLocation);
+
+            function getLocation() {
+                loading.style.display = 'flex';
+                coordinatesContainer.style.display = 'none';
+                
+                if (!navigator.geolocation) {
+                    alert('المتصفح لا يدعم خدمة تحديد الموقع');
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    handleError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+
+            function showPosition(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                loading.style.display = 'none';
+                
+                // تحديث القيم
+                latitudeValue.textContent = latitude.toFixed(6);
+                longitudeValue.textContent = longitude.toFixed(6);
+                
+                // إظهار الحاوية
+                coordinatesContainer.style.display = 'flex';
+                coordinatesContainer.classList.add('fade-in');
+                
+                // إخفاء التعليمات الأولية وإظهار التعليمات الجديدة
+                initialInstructions.classList.add('hidden');
+                afterInstructions.classList.remove('hidden');
+                
+                // الحصول على اسم المدينة والمنطقة
+                getLocationName(latitude, longitude);
+                
+                // إعادة تعيين عداد الرفض
+                permissionDeniedCount = 0;
+            }
+
+            function handleError(error) {
+                loading.style.display = 'none';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        permissionDeniedCount++;
+                        if (permissionDeniedCount >= 2) {
+                            alert('لقد رفضت الإذن أكثر من مرة. الرجاء اتباع التعليمات أعلاه لتمكين الإذن يدويًا.');
+                        } else {
+                            alert('تم رفض الإذن لتحديد الموقع. الرجاء اتباع التعليمات أعلاه.');
+                        }
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert('معلومات الموقع غير متاحة.');
+                        break;
+                    case error.TIMEOUT:
+                        alert('انتهت مهلة طلب الحصول على الموقع.');
+                        break;
+                    default:
+                        alert('حدث خطأ غير معروف أثناء الحصول على الموقع.');
+                        break;
+                }
+            }
+
+            function getLocationName(lat, lng) {
+                // استخدام خدمة عكسية للحصول على اسم الموقع
+                // في تطبيق حقيقي، يمكن استخدام خدمة مثل Nominatim أو Google Geocoding API
+                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`;
+                
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.address) {
+                            const address = data.address;
+                            cityName.textContent = address.city || address.town || address.village || 'غير معروف';
+                            neighborhood.textContent = address.neighbourhood || address.suburb || 'غير معروف';
+                        } else {
+                            cityName.textContent = 'غير معروف';
+                            neighborhood.textContent = 'غير معروف';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error getting location name:', error);
+                        cityName.textContent = 'غير معروف';
+                        neighborhood.textContent = 'غير معروف';
+                    });
+            }
+        });
     </script>
 </body>
 </html>
