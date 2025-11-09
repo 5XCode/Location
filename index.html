@@ -14,6 +14,7 @@
             --light-accent: #58a6ff;
             --text: #f0f6fc;
             --success: #238636;
+            --error: #da3633;
         }
 
         * {
@@ -105,6 +106,405 @@
             display: flex;
             gap: 10px;
             width: 100%;
+        }
+
+        .coordinate-box {
+            flex: 1;
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #30363d;
+        }
+
+        .coordinate-label {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: var(--light-accent);
+        }
+
+        .coordinate-value {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .copy-btn:active {
+            background-color: var(--light-accent);
+        }
+
+        .location-details {
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            border: 1px solid #30363d;
+        }
+
+        .location-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .country-flag {
+            font-size: 1.2rem;
+            margin-left: 8px;
+        }
+
+        .loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(88, 166, 255, 0.3);
+            border-top: 3px solid var(--light-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .app-link {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 15px;
+            width: 100%;
+            border: 1px solid #30363d;
+        }
+
+        .app-link a {
+            color: var(--light-accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 15px;
+            border: 1px solid var(--light-accent);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8b949e;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--error);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>تحديد الموقع الجغرافي</h1>
+            <p>احصل على خطوط الطول والعرض لموقعك بدقة فائقة</p>
+        </header>
+
+        <div class="card">
+            <button id="locationBtn" class="btn">تحديد موقعي بدقة</button>
+            
+            <div id="initialInstructions" class="instructions">
+                <h3>اذا لم يعمل الزر:</h3>
+                <p>انتقل للاعدادات > اعدادات المواقع الالكترونيه > اذن الموقع > السؤال اولا</p>
+                <p>Settings > Site settings > Location > Ask before accessing</p>
+            </div>
+
+            <div id="afterInstructions" class="instructions hidden">
+                <h3>تعليمات الاستخدام:</h3>
+                <p>انسخ خط الطول هذا و العرض هذا ثم انتقل للتطبيق و ضعهم في قائمة تحديد الموقع يدويا ثم سيتم تحديد موقعك بدقه بدون اذن الموقع وسيتم تحديد مواقيت الصلاه الخاصه بك بدقه</p>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>جاري تحديد موقعك...</p>
+        </div>
+
+        <div id="coordinatesContainer" class="coordinates-container">
+            <div class="coordinates-row">
+                <div class="coordinate-box">
+                    <div class="coordinate-label">خط الطول</div>
+                    <div id="longitudeValue" class="coordinate-value">--</div>
+                    <button class="copy-btn" data-clipboard-target="#longitudeValue">نسخ</button>
+                </div>
+                <div class="coordinate-box">
+                    <div class="coordinate-label">خط العرض</div>
+                    <div id="latitudeValue" class="coordinate-value">--</div>
+                    <button class="copy-btn" data-clipboard-target="#latitudeValue">نسخ</button>
+                </div>
+            </div>
+
+            <div class="location-details">
+                <div class="location-line">
+                    <span id="countryFlag" class="country-flag"></span>
+                    <span id="fullAddress">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-link">
+            <a id="appLink">انتقل إلى تطبيق مواقيت الصلاة</a>
+        </div>
+
+        <footer>
+            <p>جميع الحقوق محفوظة &copy; 2026 - موقع تحديد الموقع الجغرافي</p>
+            <p>هذا الموقع خاص بتطبيق مواقيت الصلاة الخاص بالمطور Kimo</p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">التطبيق غير موجود بجهازك</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const locationBtn = document.getElementById('locationBtn');
+            const loading = document.getElementById('loading');
+            const coordinatesContainer = document.getElementById('coordinatesContainer');
+            const initialInstructions = document.getElementById('initialInstructions');
+            const afterInstructions = document.getElementById('afterInstructions');
+            const longitudeValue = document.getElementById('longitudeValue');
+            const latitudeValue = document.getElementById('latitudeValue');
+            const fullAddress = document.getElementById('fullAddress');
+            const countryFlag = document.getElementById('countryFlag');
+            const appLink = document.getElementById('appLink');
+            const toast = document.getElementById('toast');
+            const copyButtons = document.querySelectorAll('.copy-btn');
+
+            let permissionDeniedCount = 0;
+
+            document.querySelectorAll('.btn, .copy-btn').forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-clipboard-target');
+                    const targetElement = document.querySelector(targetId);
+                    const textToCopy = targetElement.textContent;
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'تم النسخ!';
+                        this.style.backgroundColor = 'var(--success)';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.backgroundColor = 'var(--accent)';
+                        }, 2000);
+                    });
+                });
+            });
+
+            locationBtn.addEventListener('click', getLocation);
+
+            function getLocation() {
+                loading.style.display = 'flex';
+                coordinatesContainer.style.display = 'none';
+                
+                if (!navigator.geolocation) {
+                    alert('المتصفح لا يدعم خدمة تحديد الموقع');
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    handleError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 0
+                    }
+                );
+            }
+
+            function showPosition(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                loading.style.display = 'none';
+                
+                latitudeValue.textContent = latitude.toFixed(6);
+                longitudeValue.textContent = longitude.toFixed(6);
+                
+                coordinatesContainer.style.display = 'flex';
+                coordinatesContainer.classList.add('fade-in');
+                
+                initialInstructions.classList.add('hidden');
+                afterInstructions.classList.remove('hidden');
+                
+                getLocationDetails(latitude, longitude);
+                
+                permissionDeniedCount = 0;
+            }
+
+            function handleError(error) {
+                loading.style.display = 'none';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        permissionDeniedCount++;
+                        if (permissionDeniedCount >= 2) {
+                            alert('لقد رفضت الإذن أكثر من مرة. الرجاء اتباع التعليمات أعلاه لتمكين الإذن يدويًا.');
+                        } else {
+                            alert('تم رفض الإذن لتحديد الموقع. الرجاء اتباع التعليمات أعلاه.');
+                        }
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert('معلومات الموقع غير متاحة.');
+                        break;
+                    case error.TIMEOUT:
+                        alert('انتهت مهلة طلب الحصول على الموقع.');
+                        break;
+                    default:
+                        alert('حدث خطأ غير معروف أثناء الحصول على الموقع.');
+                        break;
+                }
+            }
+
+            function getLocationDetails(lat, lng) {
+                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`;
+                
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.address) {
+                            const address = data.address;
+                            const countryCode = getCountryCode(data.address.country_code);
+                            countryFlag.textContent = getFlagEmoji(countryCode);
+                            
+                            let addressParts = [];
+                            if (address.city || address.town || address.village) {
+                                addressParts.push(address.city || address.town || address.village);
+                            }
+                            if (address.state) {
+                                addressParts.push(address.state);
+                            }
+                            if (address.country) {
+                                addressParts.push(address.country);
+                            }
+                            
+                            fullAddress.textContent = addressParts.join('، ');
+                        } else {
+                            countryFlag.textContent = '🏴';
+                            fullAddress.textContent = 'موقع غير معروف';
+                        }
+                    })
+                    .catch(error => {
+                        countryFlag.textContent = '🏴';
+                        fullAddress.textContent = 'خطأ في تحميل البيانات';
+                    });
+            }
+
+            function getCountryCode(code) {
+                if (!code) return 'UN';
+                return code.toUpperCase();
+            }
+
+            function getFlagEmoji(countryCode) {
+                if (countryCode === 'UN') return '🏴';
+                const codePoints = countryCode
+                    .split('')
+                    .map(char => 127397 + char.charCodeAt());
+                return String.fromCodePoint(...codePoints);
+            }
+
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            appLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const packageName = 'com.Azan.world';
+                const intentUrl = `intent://${packageName}#Intent;package=${packageName};scheme=${packageName};end;`;
+                
+                window.location.href = intentUrl;
+                
+                setTimeout(function() {
+                    if (document.hidden || document.webkitHidden) {
+                        console.log('التطبيق موجود وتم فتحه');
+                    } else {
+                        showToast();
+                        console.log('التطبيق غير موجود');
+                    }
+                }, 2000);
+            });
+
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    console.log('تم فتح التطبيق بنجاح');
+                }
+            });
+        });
+    </script>
+</body>
+</html>            width: 100%;
         }
 
         .coordinate-box {
