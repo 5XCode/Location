@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي - جلب الإحداثيات ومواقيت الصلاة</title>
+    <title>موقع الإحداثيات الجغرافية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
         
         :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4bb543;
-            --warning: #f9a826;
-            --danger: #e63946;
-            --radius: 12px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --bg-primary: #171C1F;
+            --bg-secondary: #2E2F33;
+            --accent: #4A90E2;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B3B8;
+            --border: #3A3B3C;
+            --success: #00C851;
         }
         
         * {
@@ -30,84 +26,64 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: var(--light);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            overflow-x: hidden;
         }
         
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 500px;
             margin: 0 auto;
-            animation: fadeIn 1s ease;
         }
         
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 30px;
-            margin-bottom: 30px;
-            color: var(--dark);
-            transition: var(--transition);
-            transform: translateY(0);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            background-color: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
         }
         
         h1 {
             text-align: center;
-            margin-bottom: 10px;
-            color: var(--light);
-            font-size: 2.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-        
-        .subtitle {
-            text-align: center;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: var(--text-primary);
         }
         
         .location-icon {
             text-align: center;
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--accent);
             margin-bottom: 20px;
-            animation: bounce 2s infinite;
         }
         
         .btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            padding: 16px;
+            background-color: var(--accent);
             color: white;
             border: none;
-            border-radius: var(--radius);
+            border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
         }
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.6);
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.6);
         }
         
         .btn:active {
@@ -115,129 +91,116 @@
         }
         
         .btn:disabled {
-            background: #cccccc;
+            background-color: #5A5B5D;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+        
+        .city-box {
+            background-color: var(--bg-primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .city-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .location-details {
+            font-size: 1rem;
+            color: var(--text-secondary);
         }
         
         .coordinates-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin: 25px 0;
+            margin: 20px 0;
         }
         
         .coordinate-box {
-            background: white;
-            border-radius: var(--radius);
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid #eaeaea;
-            transition: var(--transition);
-        }
-        
-        .coordinate-box:hover {
-            border-color: var(--accent);
+            background-color: var(--bg-primary);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            position: relative;
         }
         
         .coordinate-label {
             font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 5px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         .coordinate-value {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--text-primary);
             direction: ltr;
             text-align: center;
+            font-family: monospace;
         }
         
         .copy-btn {
-            background: var(--accent);
-            color: white;
+            background: transparent;
+            color: var(--accent);
             border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
             cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            width: 100%;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+            padding: 5px;
         }
         
         .copy-btn:hover {
-            background: #3aa8d8;
+            color: var(--text-primary);
         }
         
-        .city-info {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
+        .instructions {
+            background-color: var(--bg-primary);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: var(--radius);
-            margin: 20px 0;
-            text-align: center;
-            animation: slideIn 0.5s ease;
-        }
-        
-        .city-name {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        
-        .city-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .detail-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .prayer-times {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
             margin-top: 20px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
         }
         
-        .prayer-time {
-            background: white;
-            border-radius: 8px;
-            padding: 15px 10px;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            transition: var(--transition);
-        }
-        
-        .prayer-time:hover {
-            transform: translateY(-3px);
-        }
-        
-        .prayer-name {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-        
-        .prayer-value {
+        .instructions h3 {
+            margin-bottom: 12px;
+            color: var(--accent);
             font-size: 1.1rem;
-            color: var(--primary);
-            font-weight: 700;
+        }
+        
+        .instructions p {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .instructions ol {
+            padding-right: 20px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
         }
         
         .footer {
             text-align: center;
-            margin-top: 30px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            animation: fadeIn 2s ease;
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
         
         .loading {
@@ -247,49 +210,43 @@
         }
         
         .spinner {
-            border: 5px solid rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            border-top: 5px solid var(--accent);
-            width: 50px;
-            height: 50px;
+            border-top: 4px solid var(--accent);
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 15px;
         }
         
-        .permission-request {
+        .permission-denied {
+            display: none;
             text-align: center;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            animation: pulse 3s infinite;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 0, 0, 0.3);
         }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .denied-icon {
+            font-size: 2.5rem;
+            color: #ff4444;
+            margin-bottom: 15px;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         /* Responsive */
@@ -299,7 +256,7 @@
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 1.6rem;
             }
             
             .card {
@@ -310,20 +267,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>موقع تحديد الإحداثيات</h1>
-        <p class="subtitle">احصل على إحداثيات موقعك الدقيقة ومواقيت الصلاة</p>
+        <h1>موقع الإحداثيات الجغرافية</h1>
         
-        <div class="permission-request">
+        <div class="card fade-in">
             <div class="location-icon">
                 <i class="fas fa-map-marker-alt"></i>
             </div>
-            <h2>السماح بالوصول إلى الموقع</h2>
-            <p>يحتاج هذا الموقع إلى الوصول إلى موقعك لتحديد الإحداثيات الدقيقة وعرض مواقيت الصلاة</p>
-        </div>
-        
-        <div class="card">
+            
             <button id="getLocationBtn" class="btn">
-                <i class="fas fa-location-arrow"></i> احصل على موقعي الآن
+                <i class="fas fa-location-arrow"></i> احصل على إحداثيات موقعي
             </button>
             
             <div class="loading" id="loading">
@@ -331,42 +283,64 @@
                 <p>جاري تحديد موقعك...</p>
             </div>
             
-            <div id="coordinatesSection" style="display: none;">
+            <div class="permission-denied" id="permissionDenied">
+                <div class="denied-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>تم رفض طلب الموقع</h3>
+                <p>يجب السماح بالوصول إلى الموقع الجغرافي لعرض الإحداثيات</p>
+            </div>
+            
+            <div id="locationData" style="display: none;">
+                <div class="city-box fade-in">
+                    <div class="city-name" id="cityName">--</div>
+                    <div class="location-details" id="locationDetails">--</div>
+                </div>
+                
                 <div class="coordinates-container">
-                    <div class="coordinate-box">
-                        <div class="coordinate-label">خط العرض (Latitude)</div>
+                    <div class="coordinate-box fade-in">
+                        <div class="coordinate-label">
+                            خط العرض
+                            <button class="copy-btn" onclick="copyCoordinate('latitudeValue')">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
                         <div class="coordinate-value" id="latitudeValue">--</div>
-                        <button class="copy-btn" onclick="copyCoordinate('latitudeValue')">
-                            <i class="fas fa-copy"></i> نسخ
-                        </button>
                     </div>
                     
-                    <div class="coordinate-box">
-                        <div class="coordinate-label">خط الطول (Longitude)</div>
+                    <div class="coordinate-box fade-in">
+                        <div class="coordinate-label">
+                            خط الطول
+                            <button class="copy-btn" onclick="copyCoordinate('longitudeValue')">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
                         <div class="coordinate-value" id="longitudeValue">--</div>
-                        <button class="copy-btn" onclick="copyCoordinate('longitudeValue')">
-                            <i class="fas fa-copy"></i> نسخ
-                        </button>
                     </div>
-                </div>
-                
-                <div class="city-info" id="cityInfo">
-                    <div class="city-name" id="cityName">--</div>
-                    <div class="city-details">
-                        <div class="detail-item">
-                            <i class="fas fa-flag"></i> الدولة: <span id="country">--</span>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fas fa-map"></i> المنطقة: <span id="region">--</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 style="text-align: center; margin: 20px 0; color: var(--dark);">مواقيت الصلاة</h3>
-                <div class="prayer-times" id="prayerTimes">
-                    <!-- سيتم تعبئة مواقيت الصلاة هنا -->
                 </div>
             </div>
+        </div>
+        
+        <div class="instructions fade-in">
+            <h3>إذا لم يظهر طلب الإذن:</h3>
+            <p>اتبع هذه الخطوات لتشغيل إذن الموقع:</p>
+            <ol>
+                <li>اذهب إلى إعدادات المتصفح</li>
+                <li>ابحث عن "إعدادات المواقع" أو "Site Settings"</li>
+                <li>ابحث عن "الموقع الجغرافي" أو "Location"</li>
+                <li>غيّر الإعداد إلى "السماح" أو "Ask"</li>
+                <li>أعد تحميل الصفحة وحاول مرة أخرى</li>
+            </ol>
+            
+            <h3>If the permission prompt doesn't appear:</h3>
+            <p>Follow these steps to enable location permission:</p>
+            <ol>
+                <li>Go to your browser settings</li>
+                <li>Search for "Site settings" or "Privacy and security"</li>
+                <li>Find "Location" permissions</li>
+                <li>Change the setting to "Ask" or "Allow"</li>
+                <li>Reload the page and try again</li>
+            </ol>
         </div>
         
         <div class="footer">
@@ -378,13 +352,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             const getLocationBtn = document.getElementById('getLocationBtn');
             const loadingElement = document.getElementById('loading');
-            const coordinatesSection = document.getElementById('coordinatesSection');
+            const locationData = document.getElementById('locationData');
+            const permissionDenied = document.getElementById('permissionDenied');
             const latitudeValue = document.getElementById('latitudeValue');
             const longitudeValue = document.getElementById('longitudeValue');
             const cityName = document.getElementById('cityName');
-            const country = document.getElementById('country');
-            const region = document.getElementById('region');
-            const prayerTimes = document.getElementById('prayerTimes');
+            const locationDetails = document.getElementById('locationDetails');
+            
+            let permissionRequestCount = 0;
+            const maxPermissionRequests = 2;
             
             getLocationBtn.addEventListener('click', getLocation);
             
@@ -394,7 +370,10 @@
                     return;
                 }
                 
+                permissionRequestCount++;
+                
                 loadingElement.style.display = 'block';
+                permissionDenied.style.display = 'none';
                 getLocationBtn.disabled = true;
                 getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تحديد الموقع...';
                 
@@ -410,40 +389,44 @@
                         
                         // إخفاء التحميل وإظهار النتائج
                         loadingElement.style.display = 'none';
-                        coordinatesSection.style.display = 'block';
+                        locationData.style.display = 'block';
                         getLocationBtn.style.display = 'none';
                         
-                        // جلب معلومات الموقع ومواقيت الصلاة
+                        // جلب معلومات الموقع
                         getLocationInfo(lat, lon);
-                        getPrayerTimes(lat, lon);
                     },
                     // Error callback
                     function(error) {
                         loadingElement.style.display = 'none';
                         getLocationBtn.disabled = false;
-                        getLocationBtn.innerHTML = '<i class="fas fa-location-arrow"></i> احصل على موقعي الآن';
+                        getLocationBtn.innerHTML = '<i class="fas fa-location-arrow"></i> احصل على إحداثيات موقعي';
                         
-                        let errorMessage = 'حدث خطأ في تحديد الموقع: ';
+                        let errorMessage = '';
                         switch(error.code) {
                             case error.PERMISSION_DENIED:
-                                errorMessage += 'تم رفض طلب الوصول إلى الموقع';
+                                errorMessage = 'تم رفض طلب الوصول إلى الموقع';
+                                permissionDenied.style.display = 'block';
+                                
+                                if (permissionRequestCount >= maxPermissionRequests) {
+                                    getLocationBtn.style.display = 'none';
+                                }
                                 break;
                             case error.POSITION_UNAVAILABLE:
-                                errorMessage += 'معلومات الموقع غير متاحة';
+                                errorMessage = 'معلومات الموقع غير متاحة';
                                 break;
                             case error.TIMEOUT:
-                                errorMessage += 'انتهت مهلة طلب الموقع';
+                                errorMessage = 'انتهت مهلة طلب الموقع';
                                 break;
                             default:
-                                errorMessage += 'خطأ غير معروف';
+                                errorMessage = 'خطأ غير معروف';
                         }
                         
-                        alert(errorMessage);
+                        console.error('Error getting location:', errorMessage);
                     },
                     // Options
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 15000,
                         maximumAge: 0
                     }
                 );
@@ -451,67 +434,40 @@
             
             function getLocationInfo(lat, lon) {
                 // استخدام OpenStreetMap Nominatim API للحصول على معلومات الموقع
-                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ar`)
                     .then(response => response.json())
                     .then(data => {
                         if (data && data.address) {
                             const address = data.address;
                             
                             // تحديث معلومات المدينة
-                            cityName.textContent = address.city || address.town || address.village || address.county || 'غير معروف';
-                            country.textContent = address.country || 'غير معروف';
-                            region.textContent = address.state || address.region || 'غير معروف';
+                            const city = address.city || address.town || address.village || address.county || 'موقع غير معروف';
+                            const country = address.country || '';
+                            const region = address.state || address.region || '';
+                            
+                            cityName.textContent = city;
+                            
+                            let details = '';
+                            if (region && country) {
+                                details = `${region}, ${country}`;
+                            } else if (country) {
+                                details = country;
+                            } else if (region) {
+                                details = region;
+                            } else {
+                                details = 'تفاصيل الموقع';
+                            }
+                            
+                            locationDetails.textContent = details;
+                        } else {
+                            cityName.textContent = 'موقعك الحالي';
+                            locationDetails.textContent = `الإحداثيات: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
                         }
                     })
                     .catch(error => {
                         console.error('Error fetching location info:', error);
-                        cityName.textContent = 'غير معروف';
-                    });
-            }
-            
-            function getPrayerTimes(lat, lon) {
-                // استخدام Aladhan API لجلب مواقيت الصلاة
-                const today = new Date();
-                const dateString = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`;
-                
-                fetch(`https://api.aladhan.com/v1/timings/${dateString}?latitude=${lat}&longitude=${lon}&method=5`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data && data.data && data.data.timings) {
-                            const timings = data.data.timings;
-                            
-                            // عرض مواقيت الصلاة
-                            prayerTimes.innerHTML = `
-                                <div class="prayer-time">
-                                    <div class="prayer-name">الفجر</div>
-                                    <div class="prayer-value">${timings.Fajr}</div>
-                                </div>
-                                <div class="prayer-time">
-                                    <div class="prayer-name">الشروق</div>
-                                    <div class="prayer-value">${timings.Sunrise}</div>
-                                </div>
-                                <div class="prayer-time">
-                                    <div class="prayer-name">الظهر</div>
-                                    <div class="prayer-value">${timings.Dhuhr}</div>
-                                </div>
-                                <div class="prayer-time">
-                                    <div class="prayer-name">العصر</div>
-                                    <div class="prayer-value">${timings.Asr}</div>
-                                </div>
-                                <div class="prayer-time">
-                                    <div class="prayer-name">المغرب</div>
-                                    <div class="prayer-value">${timings.Maghrib}</div>
-                                </div>
-                                <div class="prayer-time">
-                                    <div class="prayer-name">العشاء</div>
-                                    <div class="prayer-value">${timings.Isha}</div>
-                                </div>
-                            `;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching prayer times:', error);
-                        prayerTimes.innerHTML = '<p>حدث خطأ في جلب مواقيت الصلاة</p>';
+                        cityName.textContent = 'موقعك الحالي';
+                        locationDetails.textContent = `الإحداثيات: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
                     });
             }
         });
@@ -523,20 +479,19 @@
                 .then(() => {
                     // إظهار رسالة نجاح النسخ
                     const btn = event.target.closest('button');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                    btn.style.background = 'var(--success)';
+                    const originalIcon = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    btn.style.color = 'var(--success)';
                     
                     setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.style.background = 'var(--accent)';
+                        btn.innerHTML = originalIcon;
+                        btn.style.color = 'var(--accent)';
                     }, 2000);
                 })
                 .catch(err => {
                     console.error('Failed to copy: ', err);
-                    alert('فشل نسخ النص');
                 });
         }
     </script>
 </body>
-</html>
+    </html>
