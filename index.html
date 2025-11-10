@@ -234,7 +234,7 @@
     <div class="container">
         <header>
             <h1>تحديد الموقع الجغرافي</h1>
-            <p>احصل على خطوط الطول والعرض لموقعك بدقة فائقة</p>
+            <p>احصل على خطوط الطول والعرض بدقة فائقة جدًا</p>
         </header>
 
         <div class="card">
@@ -248,7 +248,7 @@
 
             <div id="afterInstructions" class="instructions hidden">
                 <h3>تعليمات الاستخدام:</h3>
-                <p>انسخ خط الطول هذا و العرض هذا ثم انتقل للتطبيق و ضعهم في قائمة تحديد الموقع يدويا ثم سيتم تحديد موقعك بدقه بدون اذن الموقع وسيتم تحديد مواقيت الصلاه الخاصه بك بدقه</p>
+                <p>انسخ خط الطول و خط العرض ثم ضعهم في التطبيق لتحديد موقعك بدقة عالية جدًا.</p>
             </div>
         </div>
 
@@ -276,6 +276,10 @@
                     <span id="countryFlag" class="country-flag"></span>
                     <span id="fullAddress">--</span>
                 </div>
+                <div class="location-line">
+                    <span class="coordinate-label">دقة الموقع:</span>
+                    <span id="accuracyValue">-- متر</span>
+                </div>
             </div>
         </div>
 
@@ -285,7 +289,7 @@
 
         <footer>
             <p>جميع الحقوق محفوظة &copy; 2026 - موقع تحديد الموقع الجغرافي</p>
-            <p>هذا الموقع خاص بتطبيق مواقيت الصلاة الخاص بالمطور Kimo</p>
+            <p>خاص بتطبيق مواقيت الصلاة للمطور Kimo</p>
         </footer>
     </div>
 
@@ -300,19 +304,15 @@
             const latitudeValue = document.getElementById('latitudeValue');
             const fullAddress = document.getElementById('fullAddress');
             const countryFlag = document.getElementById('countryFlag');
+            const accuracyValue = document.getElementById('accuracyValue');
             const appLink = document.getElementById('appLink');
             const copyButtons = document.querySelectorAll('.copy-btn');
 
             let permissionDeniedCount = 0;
 
             document.querySelectorAll('.btn, .copy-btn').forEach(button => {
-                button.addEventListener('mousedown', function() {
-                    this.style.transform = 'scale(0.98)';
-                });
-                
-                button.addEventListener('mouseup', function() {
-                    this.style.transform = 'scale(1)';
-                });
+                button.addEventListener('mousedown', function() { this.style.transform = 'scale(0.98)'; });
+                button.addEventListener('mouseup', function() { this.style.transform = 'scale(1)'; });
             });
 
             copyButtons.forEach(button => {
@@ -320,12 +320,10 @@
                     const targetId = this.getAttribute('data-clipboard-target');
                     const targetElement = document.querySelector(targetId);
                     const textToCopy = targetElement.textContent;
-                    
                     navigator.clipboard.writeText(textToCopy).then(() => {
                         const originalText = this.textContent;
                         this.textContent = 'تم النسخ!';
                         this.style.backgroundColor = 'var(--success)';
-                        
                         setTimeout(() => {
                             this.textContent = originalText;
                             this.style.backgroundColor = 'var(--accent)';
@@ -339,71 +337,98 @@
             function getLocation() {
                 loading.style.display = 'flex';
                 coordinatesContainer.style.display = 'none';
-                
+
                 if (!navigator.geolocation) {
                     alert('المتصفح لا يدعم خدمة تحديد الموقع');
                     loading.style.display = 'none';
                     return;
                 }
 
-                navigator.geolocation.getCurrentPosition(
-                    showPosition,
-                    handleError,
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 0
+                const desiredAccuracy = 10; // دقة مثالية بالـمتر
+                const maxTimeMs = 25000; // مهلة 25 ثانية للحصول على أفضل دقة
+                let bestPosition = null;
+                let watchId = null;
+                const startTime = Date.now();
+
+                function acceptPosition(pos) {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    const acc = pos.coords.accuracy;
+
+                    latitudeValue.textContent = lat.toFixed(6);
+                    longitudeValue.textContent = lon.toFixed(6);
+                    accuracyValue.textContent = `${Math.round(acc)} متر`;
+
+                    if (!bestPosition || acc < bestPosition.coords.accuracy) {
+                        bestPosition = pos;
                     }
-                );
-            }
 
-            function showPosition(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                
-                loading.style.display = 'none';
-                
-                latitudeValue.textContent = latitude.toFixed(6);
-                longitudeValue.textContent = longitude.toFixed(6);
-                
-                coordinatesContainer.style.display = 'flex';
-                coordinatesContainer.classList.add('fade-in');
-                
-                initialInstructions.classList.add('hidden');
-                afterInstructions.classList.remove('hidden');
-                
-                getLocationDetails(latitude, longitude);
-                
-                permissionDeniedCount = 0;
-            }
+                    if (acc <= desiredAccuracy || (Date.now() - startTime) >= maxTimeMs) {
+                        navigator.geolocation.clearWatch(watchId);
+                        loading.style.display = 'none';
+                        coordinatesContainer.style.display = 'flex';
+                        coordinatesContainer.classList.add('fade-in');
+                        initialInstructions.classList.add('hidden');
+                        afterInstructions.classList.remove('hidden');
 
-            function handleError(error) {
-                loading.style.display = 'none';
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        permissionDeniedCount++;
-                        if (permissionDeniedCount >= 2) {
-                            alert('لقد رفضت الإذن أكثر من مرة. الرجاء اتباع التعليمات أعلاه لتمكين الإذن يدويًا.');
-                        } else {
-                            alert('تم رفض الإذن لتحديد الموقع. الرجاء اتباع التعليمات أعلاه.');
-                        }
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        alert('معلومات الموقع غير متاحة.');
-                        break;
-                    case error.TIMEOUT:
-                        alert('انتهت مهلة طلب الحصول على الموقع.');
-                        break;
-                    default:
-                        alert('حدث خطأ غير معروف أثناء الحصول على الموقع.');
-                        break;
+                        latitudeValue.textContent = bestPosition.coords.latitude.toFixed(6);
+                        longitudeValue.textContent = bestPosition.coords.longitude.toFixed(6);
+                        accuracyValue.textContent = `${Math.round(bestPosition.coords.accuracy)} متر`;
+
+                        getLocationDetails(bestPosition.coords.latitude, bestPosition.coords.longitude);
+                        permissionDeniedCount = 0;
+                    }
                 }
+
+                function errorHandler(err) {
+                    navigator.geolocation.clearWatch(watchId);
+                    loading.style.display = 'none';
+                    switch(err.code) {
+                        case err.PERMISSION_DENIED:
+                            permissionDeniedCount++;
+                            alert(permissionDeniedCount >= 2 ? 
+                                'لقد رفضت الإذن أكثر من مرة. الرجاء تمكين الإذن يدويًا.' : 
+                                'تم رفض الإذن لتحديد الموقع. الرجاء اتباع التعليمات.');
+                            break;
+                        case err.POSITION_UNAVAILABLE:
+                            alert('معلومات الموقع غير متاحة.');
+                            break;
+                        case err.TIMEOUT:
+                            alert('انتهت مهلة طلب الحصول على الموقع.');
+                            break;
+                        default:
+                            alert('حدث خطأ غير معروف أثناء الحصول على الموقع.');
+                            break;
+                    }
+                }
+
+                watchId = navigator.geolocation.watchPosition(acceptPosition, errorHandler, {
+                    enableHighAccuracy: true,
+                    maximumAge: 0,
+                    timeout: maxTimeMs
+                });
+
+                // احتياطي عند انتهاء المهلة
+                setTimeout(() => {
+                    if (watchId) {
+                        navigator.geolocation.clearWatch(watchId);
+                        if (bestPosition) {
+                            loading.style.display = 'none';
+                            coordinatesContainer.style.display = 'flex';
+                            latitudeValue.textContent = bestPosition.coords.latitude.toFixed(6);
+                            longitudeValue.textContent = bestPosition.coords.longitude.toFixed(6);
+                            accuracyValue.textContent = `${Math.round(bestPosition.coords.accuracy)} متر`;
+                            getLocationDetails(bestPosition.coords.latitude, bestPosition.coords.longitude);
+                        } else {
+                            loading.style.display = 'none';
+                            alert('لم نتمكن من الحصول على موقع بدقة. حاول تفعيل GPS أو الخروج لمكان مفتوح.');
+                        }
+                    }
+                }, maxTimeMs + 500);
             }
 
             function getLocationDetails(lat, lng) {
                 const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`;
-                
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
@@ -411,41 +436,28 @@
                             const address = data.address;
                             const countryCode = getCountryCode(data.address.country_code);
                             countryFlag.textContent = getFlagEmoji(countryCode);
-                            
+
                             let addressParts = [];
-                            if (address.city || address.town || address.village) {
-                                addressParts.push(address.city || address.town || address.village);
-                            }
-                            if (address.state) {
-                                addressParts.push(address.state);
-                            }
-                            if (address.country) {
-                                addressParts.push(address.country);
-                            }
-                            
+                            if (address.city || address.town || address.village) addressParts.push(address.city || address.town || address.village);
+                            if (address.state) addressParts.push(address.state);
+                            if (address.country) addressParts.push(address.country);
+
                             fullAddress.textContent = addressParts.join('، ');
                         } else {
                             countryFlag.textContent = '🏴';
                             fullAddress.textContent = 'موقع غير معروف';
                         }
                     })
-                    .catch(error => {
+                    .catch(() => {
                         countryFlag.textContent = '🏴';
                         fullAddress.textContent = 'خطأ في تحميل البيانات';
                     });
             }
 
-            function getCountryCode(code) {
-                if (!code) return 'UN';
-                return code.toUpperCase();
-            }
-
+            function getCountryCode(code) { return code ? code.toUpperCase() : 'UN'; }
             function getFlagEmoji(countryCode) {
                 if (countryCode === 'UN') return '🏴';
-                const codePoints = countryCode
-                    .split('')
-                    .map(char => 127397 + char.charCodeAt());
-                return String.fromCodePoint(...codePoints);
+                return String.fromCodePoint(...countryCode.split('').map(c => 127397 + c.charCodeAt()));
             }
 
             appLink.addEventListener('click', function(e) {
