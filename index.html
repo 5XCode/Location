@@ -1,470 +1,241 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحديد الموقع الجغرافي</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-bg: #0d1117;
-            --secondary-bg: #161b22;
-            --card-bg: #1c2128;
-            --accent: #1f6feb;
-            --light-accent: #58a6ff;
-            --text: #f0f6fc;
-            --success: #238636;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--primary-bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            color: var(--light-accent);
-            margin-bottom: 8px;
-            font-size: 1.6rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            border: 1px solid #30363d;
-        }
-
-        .btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 14px;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(31, 111, 235, 0.3);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .instructions {
-            background-color: var(--secondary-bg);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            border-right: 3px solid var(--accent);
-        }
-
-        .instructions h3 {
-            color: var(--light-accent);
-            margin-bottom: 8px;
-        }
-
-        .coordinates-container {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .coordinates-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .coordinate-box {
-            flex: 1;
-            background-color: var(--secondary-bg);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #30363d;
-        }
-
-        .coordinate-label {
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            color: var(--light-accent);
-        }
-
-        .coordinate-value {
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            word-break: break-all;
-            font-family: 'Courier New', monospace;
-        }
-
-        .copy-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 6px 10px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .copy-btn:active {
-            background-color: var(--light-accent);
-        }
-
-        .location-details {
-            background-color: var(--secondary-bg);
-            border-radius: 8px;
-            padding: 15px;
-            width: 100%;
-            border: 1px solid #30363d;
-        }
-
-        .location-line {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .country-flag {
-            font-size: 1.2rem;
-            margin-left: 8px;
-        }
-
-        .loading {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(88, 166, 255, 0.3);
-            border-top: 3px solid var(--light-accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .app-link {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            margin-top: 15px;
-            width: 100%;
-            border: 1px solid #30363d;
-        }
-
-        .app-link a {
-            color: var(--light-accent);
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 15px;
-            border: 1px solid var(--light-accent);
-            border-radius: 6px;
-        }
-
-        footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #8b949e;
-            width: 100%;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحديد الموقع الجغرافي</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --primary-bg: #0d1117;
+    --secondary-bg: #161b22;
+    --card-bg: #1c2128;
+    --accent: #1f6feb;
+    --light-accent: #58a6ff;
+    --text: #f0f6fc;
+    --success: #238636;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: var(--primary-bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+.container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+header { text-align: center; margin-bottom: 15px; }
+h1 { color: var(--light-accent); margin-bottom: 8px; font-size: 1.6rem; }
+.card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border:1px solid #30363d; }
+.btn { background-color: var(--accent); color: white; border: none; border-radius: 8px; padding: 14px; font-size:1rem; cursor:pointer; width:100%; transition:all 0.2s; box-shadow:0 2px 8px rgba(31,111,235,0.3);}
+.btn:active { transform: scale(0.98); }
+.instructions { background-color: var(--secondary-bg); padding: 15px; border-radius: 8px; margin-top: 15px; font-size:0.85rem; line-height:1.5; border-right:3px solid var(--accent);}
+.instructions h3 { color: var(--light-accent); margin-bottom: 8px; }
+.coordinates-container { display: none; flex-direction: column; gap:15px; width:100%; }
+.coordinates-row { display:flex; gap:10px; width:100%; }
+.coordinate-box { flex:1; background-color: var(--secondary-bg); border-radius:8px; padding:15px; text-align:center; border:1px solid #30363d;}
+.coordinate-label { font-size:0.85rem; margin-bottom:8px; color: var(--light-accent);}
+.coordinate-value { font-size:1rem; font-weight:bold; margin-bottom:10px; word-break:break-all; font-family:'Courier New', monospace;}
+.copy-btn { background-color: var(--accent); color:white; border:none; border-radius:4px; padding:6px 10px; font-size:0.8rem; cursor:pointer; width:100%;}
+.copy-btn:active { background-color: var(--light-accent); }
+.location-details { background-color: var(--secondary-bg); border-radius:8px; padding:15px; width:100%; border:1px solid #30363d;}
+.location-line { display:flex; align-items:center; margin-bottom:8px;}
+.country-flag { font-size:1.2rem; margin-left:8px; }
+.loading { display:none; flex-direction:column; align-items:center; gap:15px; margin:15px 0; }
+.spinner { width:40px; height:40px; border:3px solid rgba(88,166,255,0.3); border-top:3px solid var(--light-accent); border-radius:50%; animation:spin 1s linear infinite;}
+@keyframes spin { 0% { transform:rotate(0deg);} 100% { transform:rotate(360deg);} }
+.app-link { background-color: var(--card-bg); border-radius:8px; padding:12px; text-align:center; margin-top:15px; width:100%; border:1px solid #30363d;}
+.app-link a { color: var(--light-accent); text-decoration:none; font-size:0.9rem; display:inline-flex; align-items:center; gap:6px; padding:8px 15px; border:1px solid var(--light-accent); border-radius:6px;}
+footer { margin-top:20px; text-align:center; font-size:0.75rem; color:#8b949e; width:100%; }
+.hidden { display:none; }
+.fade-in { animation: fadeIn 0.5s ease-in;}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>تحديد الموقع الجغرافي</h1>
-            <p>احصل على خطوط الطول والعرض بدقة فائقة جدًا</p>
-        </header>
+<div class="container">
+<header>
+<h1>تحديد الموقع الجغرافي</h1>
+<p>احصل على خطوط الطول والعرض بدقة عالية جدًا</p>
+</header>
 
-        <div class="card">
-            <button id="locationBtn" class="btn">تحديد موقعي بدقة</button>
-            
-            <div id="initialInstructions" class="instructions">
-                <h3>اذا لم يعمل الزر:</h3>
-                <p>انتقل للاعدادات > اعدادات المواقع الالكترونيه > اذن الموقع > السؤال اولا</p>
-                <p>Settings > Site settings > Location > Ask before accessing</p>
-            </div>
+<div class="card">
+<button id="locationBtn" class="btn">تحديد موقعي بدقة</button>
+<div id="initialInstructions" class="instructions">
+<h3>اذا لم يعمل الزر:</h3>
+<p>انتقل للاعدادات > اعدادات المواقع الالكترونيه > اذن الموقع > السؤال اولا</p>
+<p>Settings > Site settings > Location > Ask before accessing</p>
+</div>
 
-            <div id="afterInstructions" class="instructions hidden">
-                <h3>تعليمات الاستخدام:</h3>
-                <p>انسخ خط الطول و خط العرض ثم ضعهم في التطبيق لتحديد موقعك بدقة عالية جدًا.</p>
-            </div>
-        </div>
+<div id="afterInstructions" class="instructions hidden">
+<h3>تعليمات الاستخدام:</h3>
+<p>انسخ خط الطول و خط العرض ثم ضعهم في التطبيق لتحديد موقعك بدقة عالية جدًا.</p>
+</div>
+</div>
 
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>جاري تحديد موقعك...</p>
-        </div>
+<div id="loading" class="loading">
+<div class="spinner"></div>
+<p>جاري تحديد موقعك...</p>
+</div>
 
-        <div id="coordinatesContainer" class="coordinates-container">
-            <div class="coordinates-row">
-                <div class="coordinate-box">
-                    <div class="coordinate-label">خط الطول</div>
-                    <div id="longitudeValue" class="coordinate-value">--</div>
-                    <button class="copy-btn" data-clipboard-target="#longitudeValue">نسخ</button>
-                </div>
-                <div class="coordinate-box">
-                    <div class="coordinate-label">خط العرض</div>
-                    <div id="latitudeValue" class="coordinate-value">--</div>
-                    <button class="copy-btn" data-clipboard-target="#latitudeValue">نسخ</button>
-                </div>
-            </div>
+<div id="coordinatesContainer" class="coordinates-container">
+<div class="coordinates-row">
+<div class="coordinate-box">
+<div class="coordinate-label">خط الطول</div>
+<div id="longitudeValue" class="coordinate-value">--</div>
+<button class="copy-btn" data-clipboard-target="#longitudeValue">نسخ</button>
+</div>
+<div class="coordinate-box">
+<div class="coordinate-label">خط العرض</div>
+<div id="latitudeValue" class="coordinate-value">--</div>
+<button class="copy-btn" data-clipboard-target="#latitudeValue">نسخ</button>
+</div>
+</div>
 
-            <div class="location-details">
-                <div class="location-line">
-                    <span id="countryFlag" class="country-flag"></span>
-                    <span id="fullAddress">--</span>
-                </div>
-                <div class="location-line">
-                    <span class="coordinate-label">دقة الموقع:</span>
-                    <span id="accuracyValue">-- متر</span>
-                </div>
-            </div>
-        </div>
+<div class="location-details">
+<div class="location-line">
+<span id="countryFlag" class="country-flag"></span>
+<span id="fullAddress">--</span>
+</div>
+<div class="location-line">
+<span class="coordinate-label">دقة الموقع:</span>
+<span id="accuracyValue">-- متر</span>
+</div>
+</div>
+</div>
 
-        <div class="app-link">
-            <a href="#" id="appLink">انتقل إلى تطبيق مواقيت الصلاة</a>
-        </div>
+<div class="app-link">
+<a href="#" id="appLink">انتقل إلى تطبيق مواقيت الصلاة</a>
+</div>
 
-        <footer>
-            <p>جميع الحقوق محفوظة &copy; 2026 - موقع تحديد الموقع الجغرافي</p>
-            <p>خاص بتطبيق مواقيت الصلاة للمطور Kimo</p>
-        </footer>
-    </div>
+<footer>
+<p>جميع الحقوق محفوظة &copy; 2026 - موقع تحديد الموقع الجغرافي</p>
+<p>خاص بتطبيق مواقيت الصلاة للمطور Kimo</p>
+</footer>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const locationBtn = document.getElementById('locationBtn');
-            const loading = document.getElementById('loading');
-            const coordinatesContainer = document.getElementById('coordinatesContainer');
-            const initialInstructions = document.getElementById('initialInstructions');
-            const afterInstructions = document.getElementById('afterInstructions');
-            const longitudeValue = document.getElementById('longitudeValue');
-            const latitudeValue = document.getElementById('latitudeValue');
-            const fullAddress = document.getElementById('fullAddress');
-            const countryFlag = document.getElementById('countryFlag');
-            const accuracyValue = document.getElementById('accuracyValue');
-            const appLink = document.getElementById('appLink');
-            const copyButtons = document.querySelectorAll('.copy-btn');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const locationBtn = document.getElementById('locationBtn');
+    const loading = document.getElementById('loading');
+    const coordinatesContainer = document.getElementById('coordinatesContainer');
+    const initialInstructions = document.getElementById('initialInstructions');
+    const afterInstructions = document.getElementById('afterInstructions');
+    const longitudeValue = document.getElementById('longitudeValue');
+    const latitudeValue = document.getElementById('latitudeValue');
+    const fullAddress = document.getElementById('fullAddress');
+    const countryFlag = document.getElementById('countryFlag');
+    const accuracyValue = document.getElementById('accuracyValue');
+    const appLink = document.getElementById('appLink');
+    const copyButtons = document.querySelectorAll('.copy-btn');
 
-            let permissionDeniedCount = 0;
+    document.querySelectorAll('.btn, .copy-btn').forEach(button => {
+        button.addEventListener('mousedown', function() { this.style.transform='scale(0.98)';});
+        button.addEventListener('mouseup', function() { this.style.transform='scale(1)';});
+    });
 
-            document.querySelectorAll('.btn, .copy-btn').forEach(button => {
-                button.addEventListener('mousedown', function() { this.style.transform = 'scale(0.98)'; });
-                button.addEventListener('mouseup', function() { this.style.transform = 'scale(1)'; });
-            });
-
-            copyButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-clipboard-target');
-                    const targetElement = document.querySelector(targetId);
-                    const textToCopy = targetElement.textContent;
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        const originalText = this.textContent;
-                        this.textContent = 'تم النسخ!';
-                        this.style.backgroundColor = 'var(--success)';
-                        setTimeout(() => {
-                            this.textContent = originalText;
-                            this.style.backgroundColor = 'var(--accent)';
-                        }, 2000);
-                    });
-                });
-            });
-
-            locationBtn.addEventListener('click', getLocation);
-
-            function getLocation() {
-                loading.style.display = 'flex';
-                coordinatesContainer.style.display = 'none';
-
-                if (!navigator.geolocation) {
-                    alert('المتصفح لا يدعم خدمة تحديد الموقع');
-                    loading.style.display = 'none';
-                    return;
-                }
-
-                const desiredAccuracy = 10; // دقة مثالية بالـمتر
-                const maxTimeMs = 25000; // مهلة 25 ثانية للحصول على أفضل دقة
-                let bestPosition = null;
-                let watchId = null;
-                const startTime = Date.now();
-
-                function acceptPosition(pos) {
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    const acc = pos.coords.accuracy;
-
-                    latitudeValue.textContent = lat.toFixed(6);
-                    longitudeValue.textContent = lon.toFixed(6);
-                    accuracyValue.textContent = `${Math.round(acc)} متر`;
-
-                    if (!bestPosition || acc < bestPosition.coords.accuracy) {
-                        bestPosition = pos;
-                    }
-
-                    if (acc <= desiredAccuracy || (Date.now() - startTime) >= maxTimeMs) {
-                        navigator.geolocation.clearWatch(watchId);
-                        loading.style.display = 'none';
-                        coordinatesContainer.style.display = 'flex';
-                        coordinatesContainer.classList.add('fade-in');
-                        initialInstructions.classList.add('hidden');
-                        afterInstructions.classList.remove('hidden');
-
-                        latitudeValue.textContent = bestPosition.coords.latitude.toFixed(6);
-                        longitudeValue.textContent = bestPosition.coords.longitude.toFixed(6);
-                        accuracyValue.textContent = `${Math.round(bestPosition.coords.accuracy)} متر`;
-
-                        getLocationDetails(bestPosition.coords.latitude, bestPosition.coords.longitude);
-                        permissionDeniedCount = 0;
-                    }
-                }
-
-                function errorHandler(err) {
-                    navigator.geolocation.clearWatch(watchId);
-                    loading.style.display = 'none';
-                    switch(err.code) {
-                        case err.PERMISSION_DENIED:
-                            permissionDeniedCount++;
-                            alert(permissionDeniedCount >= 2 ? 
-                                'لقد رفضت الإذن أكثر من مرة. الرجاء تمكين الإذن يدويًا.' : 
-                                'تم رفض الإذن لتحديد الموقع. الرجاء اتباع التعليمات.');
-                            break;
-                        case err.POSITION_UNAVAILABLE:
-                            alert('معلومات الموقع غير متاحة.');
-                            break;
-                        case err.TIMEOUT:
-                            alert('انتهت مهلة طلب الحصول على الموقع.');
-                            break;
-                        default:
-                            alert('حدث خطأ غير معروف أثناء الحصول على الموقع.');
-                            break;
-                    }
-                }
-
-                watchId = navigator.geolocation.watchPosition(acceptPosition, errorHandler, {
-                    enableHighAccuracy: true,
-                    maximumAge: 0,
-                    timeout: maxTimeMs
-                });
-
-                // احتياطي عند انتهاء المهلة
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function(){
+            const targetId = this.getAttribute('data-clipboard-target');
+            const targetElement = document.querySelector(targetId);
+            const textToCopy = targetElement.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = this.textContent;
+                this.textContent = 'تم النسخ!';
+                this.style.backgroundColor = 'var(--success)';
                 setTimeout(() => {
-                    if (watchId) {
-                        navigator.geolocation.clearWatch(watchId);
-                        if (bestPosition) {
-                            loading.style.display = 'none';
-                            coordinatesContainer.style.display = 'flex';
-                            latitudeValue.textContent = bestPosition.coords.latitude.toFixed(6);
-                            longitudeValue.textContent = bestPosition.coords.longitude.toFixed(6);
-                            accuracyValue.textContent = `${Math.round(bestPosition.coords.accuracy)} متر`;
-                            getLocationDetails(bestPosition.coords.latitude, bestPosition.coords.longitude);
-                        } else {
-                            loading.style.display = 'none';
-                            alert('لم نتمكن من الحصول على موقع بدقة. حاول تفعيل GPS أو الخروج لمكان مفتوح.');
-                        }
-                    }
-                }, maxTimeMs + 500);
-            }
-
-            function getLocationDetails(lat, lng) {
-                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`;
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data && data.address) {
-                            const address = data.address;
-                            const countryCode = getCountryCode(data.address.country_code);
-                            countryFlag.textContent = getFlagEmoji(countryCode);
-
-                            let addressParts = [];
-                            if (address.city || address.town || address.village) addressParts.push(address.city || address.town || address.village);
-                            if (address.state) addressParts.push(address.state);
-                            if (address.country) addressParts.push(address.country);
-
-                            fullAddress.textContent = addressParts.join('، ');
-                        } else {
-                            countryFlag.textContent = '🏴';
-                            fullAddress.textContent = 'موقع غير معروف';
-                        }
-                    })
-                    .catch(() => {
-                        countryFlag.textContent = '🏴';
-                        fullAddress.textContent = 'خطأ في تحميل البيانات';
-                    });
-            }
-
-            function getCountryCode(code) { return code ? code.toUpperCase() : 'UN'; }
-            function getFlagEmoji(countryCode) {
-                if (countryCode === 'UN') return '🏴';
-                return String.fromCodePoint(...countryCode.split('').map(c => 127397 + c.charCodeAt()));
-            }
-
-            appLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = 'intent://com.Azan.world#Intent;scheme=com.Azan.world;package=com.Azan.world;end;';
+                    this.textContent = originalText;
+                    this.style.backgroundColor = 'var(--accent)';
+                }, 2000);
             });
         });
-    </script>
+    });
+
+    locationBtn.addEventListener('click', getLocation);
+
+    function getLocation() {
+        loading.style.display = 'flex';
+        coordinatesContainer.style.display = 'none';
+        if(!navigator.geolocation){ alert('المتصفح لا يدعم خدمة تحديد الموقع'); loading.style.display='none'; return; }
+
+        const desiredAccuracy = 10;
+        const maxTimeMs = 25000;
+        let bestPosition = null;
+        let watchId = null;
+        const startTime = Date.now();
+
+        function acceptPosition(pos){
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const acc = pos.coords.accuracy;
+
+            if(!bestPosition || acc < bestPosition.coords.accuracy){ bestPosition = pos; }
+
+            if(acc <= desiredAccuracy || (Date.now()-startTime)>=maxTimeMs){
+                navigator.geolocation.clearWatch(watchId);
+                showPosition(bestPosition);
+            }
+        }
+
+        function errorHandler(err){
+            navigator.geolocation.clearWatch(watchId);
+            loading.style.display='none';
+            switch(err.code){
+                case err.PERMISSION_DENIED: alert('تم رفض الإذن لتحديد الموقع.'); break;
+                case err.POSITION_UNAVAILABLE: alert('معلومات الموقع غير متاحة.'); break;
+                case err.TIMEOUT: alert('انتهت مهلة طلب الحصول على الموقع.'); break;
+                default: alert('حدث خطأ غير معروف أثناء الحصول على الموقع.'); break;
+            }
+        }
+
+        watchId = navigator.geolocation.watchPosition(acceptPosition,errorHandler,{
+            enableHighAccuracy:true, maximumAge:0, timeout:maxTimeMs
+        });
+
+        setTimeout(()=>{
+            if(watchId){ navigator.geolocation.clearWatch(watchId);
+                if(bestPosition){ showPosition(bestPosition); }
+                else{ loading.style.display='none'; alert('لم نتمكن من الحصول على موقع بدقة. حاول تفعيل GPS أو الخروج لمكان مفتوح.'); }
+            }
+        }, maxTimeMs+500);
+    }
+
+    function showPosition(pos){
+        loading.style.display='none';
+        coordinatesContainer.style.display='flex';
+        coordinatesContainer.classList.add('fade-in');
+        initialInstructions.classList.add('hidden');
+        afterInstructions.classList.remove('hidden');
+
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        latitudeValue.textContent = lat.toFixed(6);
+        longitudeValue.textContent = lon.toFixed(6);
+        accuracyValue.textContent = `${Math.round(pos.coords.accuracy)} متر`;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ar`)
+        .then(response => response.json())
+        .then(data => {
+            if(data && data.address){
+                const address = data.address;
+                const city = address.city || address.town || address.village || '';
+                const state = address.state || '';
+                const country = address.country || '';
+                fullAddress.textContent = [city,state,country].filter(Boolean).join('، ');
+                const countryCode = (address.country_code||'UN').toUpperCase();
+                countryFlag.textContent = getFlagEmoji(countryCode);
+            }else{
+                countryFlag.textContent='🏴';
+                fullAddress.textContent='موقع غير معروف';
+            }
+        })
+        .catch(()=>{ countryFlag.textContent='🏴'; fullAddress.textContent='خطأ في تحميل البيانات'; });
+    }
+
+    function getFlagEmoji(countryCode){
+        if(countryCode==='UN') return '🏴';
+        return String.fromCodePoint(...countryCode.split('').map(c=>127397+c.charCodeAt()));
+    }
+
+    appLink.addEventListener('click', function(e){
+        e.preventDefault();
+        window.location.href='intent://com.Azan.world#Intent;scheme=com.Azan.world;package=com.Azan.world;end;';
+    });
+});
+</script>
 </body>
 </html>
